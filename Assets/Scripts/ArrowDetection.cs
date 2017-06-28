@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ArrowDetection : MonoBehaviour {
 
+    public CameraInteraction CamInteraction;
+    public RectTransform SceneBackground;
     public RectTransform TopLeft;
     public RectTransform TopUp;
     public RectTransform TopDown;
@@ -42,14 +44,16 @@ public class ArrowDetection : MonoBehaviour {
         }
 
         if (_recorded) {
-            // Record ScoreOnHit
-            if (_distanceFromCenterY < PerfectLimit) { // Perfect
+            if (_distanceFromCenterX > 0.1f) {
+                _scoreOnHit = (int)Score.Miss;
+            }
+            else if (_distanceFromCenterY < PerfectLimit) { // Perfect
                 CurrentArrow.gameObject.SetActive(false);
-                Debug.Log(_distanceFromCenterY);
+                CamInteraction.ShakeRectTransform(SceneBackground);
                 _scoreOnHit = (int)Score.Perfect;
             } else if (_distanceFromCenterY < GreatLimit) { // Great
                 CurrentArrow.gameObject.SetActive(false);
-                Debug.Log(_distanceFromCenterY);
+                CamInteraction.ShakeRectTransform(SceneBackground);
                 _scoreOnHit = (int)Score.Great;
             } else { // Miss
                 _scoreOnHit = (int)Score.Miss;
