@@ -46,13 +46,14 @@ public class ArrowDetection : MonoBehaviour {
         if (_recorded) {
             if (_distanceFromCenterX > 0.1f) {
                 _scoreOnHit = (int)Score.Miss;
-            }
-            else if (_distanceFromCenterY < PerfectLimit) { // Perfect
+            } else if (_distanceFromCenterY < PerfectLimit) { // Perfect
                 CurrentArrow.gameObject.SetActive(false);
+                CurrentArrow = null;
                 CamInteraction.ShakeRectTransform(SceneBackground);
                 _scoreOnHit = (int)Score.Perfect;
             } else if (_distanceFromCenterY < GreatLimit) { // Great
                 CurrentArrow.gameObject.SetActive(false);
+                CurrentArrow = null;
                 CamInteraction.ShakeRectTransform(SceneBackground);
                 _scoreOnHit = (int)Score.Great;
             } else { // Miss
