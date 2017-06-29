@@ -22,9 +22,24 @@ public class MovingArrow : MonoBehaviour {
                 // Delete later?
                 gameObject.SetActive(false);
                 break;
-            default: // Left, Right, Up, Down arrows
-                if (Detector.CurrentArrow != MyTransform) {
-                    Detector.CurrentArrow = MyTransform;
+            case ("ArrowLeft"):
+                if (Detector.CurrentLeftArrow != MyTransform) {
+                    Detector.CurrentLeftArrow = MyTransform;
+                }
+                break;
+            case ("ArrowRight"):
+                if (Detector.CurrentRightArrow != MyTransform) {
+                    Detector.CurrentRightArrow = MyTransform;
+                }
+                break;
+            case ("ArrowUp"):
+                if (Detector.CurrentUpArrow != MyTransform) {
+                    Detector.CurrentUpArrow = MyTransform;
+                }
+                break;
+            case ("ArrowDown"):
+                if (Detector.CurrentDownArrow != MyTransform) {
+                    Detector.CurrentDownArrow = MyTransform;
                 }
                 break;
         }

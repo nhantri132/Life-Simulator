@@ -10,50 +10,48 @@ public class ArrowDetection : MonoBehaviour {
     public RectTransform TopUp;
     public RectTransform TopDown;
     public RectTransform TopRight;
-    public RectTransform CurrentArrow;
+    public RectTransform CurrentLeftArrow;
+    public RectTransform CurrentUpArrow;
+    public RectTransform CurrentRightArrow;
+    public RectTransform CurrentDownArrow;
+    public GameObject[] LeftArrowExplosions;
+    public GameObject[] UpArrowExplosions;
+    public GameObject[] DownArrowExplosions;
+    public GameObject[] RightArrowExplosions;
     public float GreatLimit;
     public float PerfectLimit;
     public enum Score { Perfect, Great, Miss }
+    public int NumOfEffects;
 
     private float _distanceFromCenterY;
     private float _distanceFromCenterX;
     private bool _recorded;
     private int _scoreOnHit;
-	
-	void Update () {
+    private int _effectCounter;
 
-        // Collect distance
-        if (Input.GetKeyDown(KeyCode.LeftArrow) && CurrentArrow != null) {
-            _distanceFromCenterY = Mathf.Abs(TopLeft.position.y - CurrentArrow.position.y);
-            _distanceFromCenterX = Mathf.Abs(TopLeft.position.x - CurrentArrow.position.x);
-            _recorded = true;
-        } else if (Input.GetKeyDown(KeyCode.UpArrow) && CurrentArrow != null) {
-            _distanceFromCenterY = Mathf.Abs(TopUp.position.y - CurrentArrow.position.y);
-            _distanceFromCenterX = Mathf.Abs(TopUp.position.x - CurrentArrow.position.x);
-            _recorded = true;
-        } else if (Input.GetKeyDown(KeyCode.DownArrow) && CurrentArrow != null) {
-            _distanceFromCenterY = Mathf.Abs(TopDown.position.y - CurrentArrow.position.y);
-            _distanceFromCenterX = Mathf.Abs(TopDown.position.x - CurrentArrow.position.x);
-            _recorded = true;
-        } else if (Input.GetKeyDown(KeyCode.RightArrow) && CurrentArrow != null) {
-            _distanceFromCenterY = Mathf.Abs(TopRight.position.y - CurrentArrow.position.y);
-            _distanceFromCenterX = Mathf.Abs(TopRight.position.x - CurrentArrow.position.x);
-            _recorded = true;
-        } else if ((Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.RightArrow)) && CurrentArrow == null) {
-            DisplayScore((int)Score.Miss);
-        }
+    private void Start() {
+        _effectCounter = 0;
+    }
 
-        if (_recorded) {
+    void Update () {
+        if (Input.GetKeyDown(KeyCode.LeftArrow) && CurrentLeftArrow != null) {
+
+            // Calculate Distance
+            _distanceFromCenterY = Mathf.Abs(TopLeft.position.y - CurrentLeftArrow.position.y);
+            _distanceFromCenterX = Mathf.Abs(TopLeft.position.x - CurrentLeftArrow.position.x);
+
+            // Check Score
             if (_distanceFromCenterX > 0.1f) {
                 _scoreOnHit = (int)Score.Miss;
             } else if (_distanceFromCenterY < PerfectLimit) { // Perfect
-                CurrentArrow.gameObject.SetActive(false);
-                CurrentArrow = null;
+                CurrentLeftArrow.gameObject.SetActive(false);
+                CurrentLeftArrow = null; 
+                ApplyRandomEffect(LeftArrowExplosions);
                 CamInteraction.ShakeRectTransform(SceneBackground);
                 _scoreOnHit = (int)Score.Perfect;
             } else if (_distanceFromCenterY < GreatLimit) { // Great
-                CurrentArrow.gameObject.SetActive(false);
-                CurrentArrow = null;
+                CurrentLeftArrow.gameObject.SetActive(false);
+                CurrentLeftArrow = null;
                 CamInteraction.ShakeRectTransform(SceneBackground);
                 _scoreOnHit = (int)Score.Great;
             } else { // Miss
@@ -62,8 +60,87 @@ public class ArrowDetection : MonoBehaviour {
 
             DisplayScore(_scoreOnHit);
 
-            // Reset flag
-            _recorded = false;
+        } else if (Input.GetKeyDown(KeyCode.UpArrow) && CurrentUpArrow != null) {
+            
+            // Calculate Distance
+            _distanceFromCenterY = Mathf.Abs(TopUp.position.y - CurrentUpArrow.position.y);
+            _distanceFromCenterX = Mathf.Abs(TopUp.position.x - CurrentUpArrow.position.x);
+
+            // Check Score
+            if (_distanceFromCenterX > 0.1f) {
+                _scoreOnHit = (int)Score.Miss;
+            } else if (_distanceFromCenterY < PerfectLimit) { // Perfect
+                CurrentUpArrow.gameObject.SetActive(false);
+                CurrentUpArrow = null;
+                ApplyRandomEffect(UpArrowExplosions);
+                CamInteraction.ShakeRectTransform(SceneBackground);
+                _scoreOnHit = (int)Score.Perfect;
+            } else if (_distanceFromCenterY < GreatLimit) { // Great
+                CurrentUpArrow.gameObject.SetActive(false);
+                CurrentUpArrow = null;
+                CamInteraction.ShakeRectTransform(SceneBackground);
+                _scoreOnHit = (int)Score.Great;
+            } else { // Miss
+                _scoreOnHit = (int)Score.Miss;
+            }
+
+            DisplayScore(_scoreOnHit);
+
+        } else if (Input.GetKeyDown(KeyCode.DownArrow) && CurrentDownArrow != null) {
+
+            // Calculate Distance
+            _distanceFromCenterY = Mathf.Abs(TopDown.position.y - CurrentDownArrow.position.y);
+            _distanceFromCenterX = Mathf.Abs(TopDown.position.x - CurrentDownArrow.position.x);
+
+            // Check Score
+            if (_distanceFromCenterX > 0.1f) {
+                _scoreOnHit = (int)Score.Miss;
+            } else if (_distanceFromCenterY < PerfectLimit) { // Perfect
+                CurrentDownArrow.gameObject.SetActive(false);
+                CurrentDownArrow = null;
+                ApplyRandomEffect(DownArrowExplosions);
+                CamInteraction.ShakeRectTransform(SceneBackground);
+                _scoreOnHit = (int)Score.Perfect;
+            } else if (_distanceFromCenterY < GreatLimit) { // Great
+                CurrentDownArrow.gameObject.SetActive(false);
+                CurrentDownArrow = null;
+                CamInteraction.ShakeRectTransform(SceneBackground);
+                _scoreOnHit = (int)Score.Great;
+            } else { // Miss
+                _scoreOnHit = (int)Score.Miss;
+            }
+
+            DisplayScore(_scoreOnHit);
+
+        } else if (Input.GetKeyDown(KeyCode.RightArrow) && CurrentRightArrow != null) {
+
+            // Calculate Distance
+            _distanceFromCenterY = Mathf.Abs(TopRight.position.y - CurrentRightArrow.position.y);
+            _distanceFromCenterX = Mathf.Abs(TopRight.position.x - CurrentRightArrow.position.x);
+
+            // Check Score
+            if (_distanceFromCenterX > 0.1f) {
+                _scoreOnHit = (int)Score.Miss;
+            } else if (_distanceFromCenterY < PerfectLimit) { // Perfect
+                CurrentRightArrow.gameObject.SetActive(false);
+                CurrentRightArrow = null;
+                ApplyRandomEffect(RightArrowExplosions);
+                CamInteraction.ShakeRectTransform(SceneBackground);
+                _scoreOnHit = (int)Score.Perfect;
+            } else if (_distanceFromCenterY < GreatLimit) { // Great
+                CurrentRightArrow.gameObject.SetActive(false);
+                CurrentRightArrow = null;
+                CamInteraction.ShakeRectTransform(SceneBackground);
+                _scoreOnHit = (int)Score.Great;
+            } else { // Miss
+                _scoreOnHit = (int)Score.Miss;
+            }
+
+            DisplayScore(_scoreOnHit);
+
+        } else if ((Input.GetKeyDown(KeyCode.LeftArrow) && CurrentLeftArrow == null) || (Input.GetKeyDown(KeyCode.RightArrow) && CurrentRightArrow == null) ||
+                   (Input.GetKeyDown(KeyCode.UpArrow) && CurrentUpArrow == null) || (Input.GetKeyDown(KeyCode.DownArrow) && CurrentDownArrow == null)) {
+            DisplayScore((int)Score.Miss);
         }
     }
 
@@ -83,5 +160,22 @@ public class ArrowDetection : MonoBehaviour {
                 Debug.Log("PERFECT");
                 break;
         }
+    }
+
+    public void ApplyRandomEffect(GameObject[] effects) {
+        if (_effectCounter == NumOfEffects) {
+            _effectCounter = 0;
+        }
+        effects[_effectCounter].SetActive(true);
+        StartCoroutine(ResetEffectAfterDuration(effects[_effectCounter]));
+        _effectCounter++;
+    }
+
+    public IEnumerator ResetEffectAfterDuration(GameObject effect) {
+        yield return new WaitForSeconds(1.0f);
+        foreach (Transform child in effect.transform) {
+            child.GetComponent<ExplosionEffect>().Reset();
+        }
+        effect.SetActive(false);
     }
 }
